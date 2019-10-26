@@ -201,7 +201,9 @@ object F {
                 for (f in files) {
                     if (f.isDirectory) {
                         for (ff in f.listFiles())
-                            verifyFileWallpaper(ff, f.listFiles().toList()) {}
+                            verifyFileWallpaper(ff, f.listFiles().toList()) {
+
+                            }
                     } else
                         verifyFileWallpaper(f, files) {}
                 }
