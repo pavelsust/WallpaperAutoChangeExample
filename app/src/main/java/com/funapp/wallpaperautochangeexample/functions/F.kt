@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.WindowManager
 import com.funapp.wallpaperautochangeexample.reusables.CACHED
 import com.funapp.wallpaperautochangeexample.reusables.Config
-import com.funapp.wallpaperautochangeexample.reusables.toFile
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.apache.commons.io.comparator.LastModifiedFileComparator

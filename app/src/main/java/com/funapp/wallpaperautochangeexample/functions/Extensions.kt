@@ -1,4 +1,4 @@
-package com.funapp.wallpaperautochangeexample.reusables
+package com.funapp.wallpaperautochangeexample.functions
 
 import android.content.Context
 import android.content.Intent
@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.funapp.wallpaperautochangeexample.BuildConfig
-import com.funapp.wallpaperautochangeexample.functions.F
 import java.io.File
 
 
