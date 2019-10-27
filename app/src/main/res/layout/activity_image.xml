@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ImageActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/black">
+
+        <ImageView
+            android:id="@+id/bgWallpaper"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+        <FrameLayout
+            android:background="@drawable/bg_gradient"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"/>
+
+        <!-- action-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <!-- back -->
+
+                <FrameLayout
+                    android:layout_width="36dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/vd_back"
+                        android:layout_gravity="center"/>
+
+
+                </FrameLayout>
+
+
+                <!-- wallpaper -->
+
+                <FrameLayout
+                    android:id="@+id/setWallpaper"
+                    android:layout_width="36dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/vd_wallpaper"
+                        tools:ignore="VectorDrawableCompat" />
+
+
+                </FrameLayout>
+
+                <!--download-->
+                <FrameLayout
+                    android:id="@+id/download"
+                    android:layout_width="36dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/vd_download"
+                        tools:ignore="VectorDrawableCompat" />
+                </FrameLayout>
+
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
