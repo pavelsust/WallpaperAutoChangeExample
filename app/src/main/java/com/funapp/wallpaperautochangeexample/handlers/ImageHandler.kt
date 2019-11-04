@@ -7,6 +7,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+
 object ImageHandler{
 
     fun getBitmapWallpaper(context: Context , url: String , callback: (Bitmap?) -> Unit){
