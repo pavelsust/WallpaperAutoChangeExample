@@ -5,4 +5,46 @@
     <string name="rate_description">This is a completely free &#127881;app &amp; will remain so forever &#128526;. It is a very humble request that you please rate &#11088;this application positively on play store so it can reach more users &amp; hold a good ratings&#129351; on play store. For past 6 months Wallup took a real toll on the ratings &amp; apparently no of users/downloads &#128546;. It will only take 1 min of your time but will mean a lot to me . Thank you &#129303;</string>
     <string name="title_activity_cached">CachedActivity</string>
 
+    <string name="crashlytics">Crashlytics helps us to analyse any misbehaviour in this application due to a crash. Only crash data will be sent to us.</string>
+    <string name="analytics">Analytics helps us to process some metrics that will help to improve this application. There will be no personal data collected at all!! Read privacy policy for more info.</string>
+
+
+    <!--wallpaper interval-->
+    <string-array name="wallpaper_interval">
+        <item>15 min</item>
+        <item>30 min</item>
+        <item>1 hour</item>
+        <item>2 hour</item>
+        <item>3 hour</item>
+        <item>6 hour</item>
+        <item>12 hour</item>
+        <item>1 day</item>
+        <item>3 day</item>
+        <item>7 day</item>
+    </string-array>
+
+    <!--wallpaper interval values-->
+    <string-array name="wallpaper_interval_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>180</item>
+        <item>360</item>
+        <item>720</item>
+        <item>1440</item>
+        <item>4320</item>
+        <item>10080</item>
+    </string-array>
+
+    <!--Download Quality-->
+    <string-array name="cached_number">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>25</item>
+        <item>50</item>
+    </string-array>
+
+
 </resources>
