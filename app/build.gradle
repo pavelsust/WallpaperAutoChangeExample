@@ -9,7 +9,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.funapp.wallpaperautochangeexample"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -24,6 +24,9 @@ android {
     compileOptions {
         sourceCompatibility = kotlin_version
         targetCompatibility = kotlin_version
+    }
+    defaultConfig{
+        vectorDrawables.useSupportLibrary = true
     }
 }
 
