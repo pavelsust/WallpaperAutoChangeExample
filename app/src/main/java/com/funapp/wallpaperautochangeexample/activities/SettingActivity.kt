@@ -11,9 +11,13 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         setContentView(R.layout.activity_setting)
+        openNewFragmnet()
+    }
 
+    fun openNewFragmnet() = MySettingsFragment().apply {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.frameLayout ,)
+            .replace(R.id.frameLayout , this)
+            .commit()
     }
 }

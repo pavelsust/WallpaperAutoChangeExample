@@ -7,4 +7,4 @@ object Config{
     val DEFEAULT_DOWNLOAD_PATH = "${Environment.getExternalStorageDirectory().path}/wallpaper"
 }
 
-lateinit var preferance: SharedPreferences
+lateinit var Prefs: SharedPreferences
