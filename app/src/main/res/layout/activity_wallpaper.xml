@@ -125,6 +125,7 @@
     <!-- ProgressBar -->
 
     <ProgressBar
+        android:id="@+id/progress"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

@@ -21,6 +21,7 @@ object ImageHandler{
 
             try {
                 callback(imageBitmap.get())
+
             }catch (e:Exception){
                 e.printStackTrace()
                 callback(null)
