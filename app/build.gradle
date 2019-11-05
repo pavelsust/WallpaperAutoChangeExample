@@ -38,7 +38,7 @@ android {
         maven { url "https://jitpack.io" }
     }
 
-    defaultConfig{
+    defaultConfig {
         vectorDrawables.useSupportLibrary = true
     }
 }
