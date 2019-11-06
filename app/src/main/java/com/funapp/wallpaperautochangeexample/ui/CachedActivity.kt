@@ -1,15 +1,13 @@
 package com.funapp.wallpaperautochangeexample.ui
 
-import android.content.Context
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.funapp.wallpaperautochangeexample.R
 import com.funapp.wallpaperautochangeexample.functions.F
 import com.funapp.wallpaperautochangeexample.functions.gone
-import com.funapp.wallpaperautochangeexample.reusables.CACHED
+import test.CACHED
 
 import kotlinx.android.synthetic.main.activity_cached.*
 import org.apache.commons.io.comparator.LastModifiedFileComparator

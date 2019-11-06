@@ -1,4 +1,4 @@
-package com.funapp.wallpaperautochangeexample.reusables
+package test
 
 import android.content.SharedPreferences
 import android.os.Environment

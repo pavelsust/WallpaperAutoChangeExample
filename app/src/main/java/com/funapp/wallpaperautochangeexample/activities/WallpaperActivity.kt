@@ -1,18 +1,19 @@
 package com.funapp.wallpaperautochangeexample.activities
 
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.funapp.wallpaperautochangeexample.R
 import com.funapp.wallpaperautochangeexample.functions.F
 import com.funapp.wallpaperautochangeexample.functions.show
 import com.funapp.wallpaperautochangeexample.handlers.ImageHandler
 import com.funapp.wallpaperautochangeexample.handlers.StorageHandler
-import com.funapp.wallpaperautochangeexample.reusables.CACHED
-import com.funapp.wallpaperautochangeexample.reusables.CACHE_NUMBER
-import com.funapp.wallpaperautochangeexample.reusables.Prefs
-import com.funapp.wallpaperautochangeexample.reusables.WALL_CHANGE
+import kotlinx.android.synthetic.main.activity_image.view.*
 import kotlinx.android.synthetic.main.activity_wallpaper.*
+import test.CACHED
+import test.CACHE_NUMBER
+import test.Prefs
+import test.WALL_CHANGE
 import java.io.File
 
 class WallpaperActivity : AppCompatActivity() {
@@ -64,10 +65,11 @@ class WallpaperActivity : AppCompatActivity() {
 
                             // if extra images in cached then delete them
 
-                            F.deleteCached(this , Prefs.getString(CACHE_NUMBER , "25")!!.toInt())
+                            F.deleteCached(this , Prefs.getString(CACHE_NUMBER, "25")!!.toInt())
 
-                            // change wallpaper if allowed
-
+                            if (Prefs.getBoolean(WALL_CHANGE , false)){
+                                com.funapp.wallpaperautochangeexample.handlers.WallpaperHandler.setWallpaper
+                            }
 
                         }
                     }

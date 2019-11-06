@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
 import com.funapp.wallpaperautochangeexample.R
-import com.funapp.wallpaperautochangeexample.reusables.RATE
+import test.RATE
 import com.funapp.wallpaperautochangeexample.functions.putAny
-import com.funapp.wallpaperautochangeexample.reusables.Prefs
+import test.Prefs
 
 object DialogHandler {
 
@@ -42,7 +42,7 @@ object DialogHandler {
         }
 
         builder.setNeutralButton("Never"){ dialog, _ ->
-            Prefs.putAny(RATE , false)
+            Prefs.putAny(RATE, false)
         }
 
         alertDialog = builder.create()

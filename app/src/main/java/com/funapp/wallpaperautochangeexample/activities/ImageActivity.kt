@@ -11,8 +11,8 @@ import com.funapp.wallpaperautochangeexample.functions.F
 import com.funapp.wallpaperautochangeexample.functions.toast
 import com.funapp.wallpaperautochangeexample.handlers.StorageHandler
 import com.funapp.wallpaperautochangeexample.handlers.WallpaperHandler
-import com.funapp.wallpaperautochangeexample.reusables.Config
-import com.funapp.wallpaperautochangeexample.reusables.IMAGE
+import test.Config
+import test.IMAGE
 import kotlinx.android.synthetic.main.activity_image.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

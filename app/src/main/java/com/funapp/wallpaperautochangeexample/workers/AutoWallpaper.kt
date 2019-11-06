@@ -27,10 +27,10 @@ import com.funapp.wallpaperautochangeexample.functions.logd
 import com.funapp.wallpaperautochangeexample.functions.toast
 import com.funapp.wallpaperautochangeexample.handlers.ImageHandler
 import com.funapp.wallpaperautochangeexample.handlers.StorageHandler
-import com.funapp.wallpaperautochangeexample.reusables.CACHED
-import com.funapp.wallpaperautochangeexample.reusables.CACHE_NUMBER
-import com.funapp.wallpaperautochangeexample.reusables.Prefs
-import com.funapp.wallpaperautochangeexample.reusables.SHOW_TOAST
+import test.CACHED
+import test.CACHE_NUMBER
+import test.Prefs
+import test.SHOW_TOAST
 
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.GlobalScope

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.funapp.wallpaperautochangeexample.activities.ImageActivity
 import com.funapp.wallpaperautochangeexample.functions.F
 import com.funapp.wallpaperautochangeexample.functions.openNewActivity
-import com.funapp.wallpaperautochangeexample.reusables.IMAGE
+import test.IMAGE
 import kotlinx.android.synthetic.main.inflator_image.view.*
 import java.io.File
 
@@ -40,7 +40,7 @@ class HolderImage(view: View): RecyclerView.ViewHolder(view){
 
             image.setOnClickListener {
                 context.openNewActivity(ImageActivity::class.java){
-                    putString(IMAGE , file.path)
+                    putString(IMAGE, file.path)
                 }
             }
         }

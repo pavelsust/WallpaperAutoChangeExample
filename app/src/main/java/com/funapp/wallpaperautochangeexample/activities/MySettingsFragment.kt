@@ -8,15 +8,17 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.funapp.wallpaperautochangeexample.BuildConfig
+import test.Prefs
 import com.funapp.wallpaperautochangeexample.R
 import com.funapp.wallpaperautochangeexample.functions.F
 import com.funapp.wallpaperautochangeexample.functions.putAny
 import com.funapp.wallpaperautochangeexample.functions.remove
 import com.funapp.wallpaperautochangeexample.functions.toast
 import com.funapp.wallpaperautochangeexample.handlers.DialogHandler
-import com.funapp.wallpaperautochangeexample.reusables.*
 import com.funapp.wallpaperautochangeexample.workers.AutoWallpaper
-import kotlinx.android.synthetic.main.activity_image.*
+import test.AUTO_WALLPAPER
+import test.CACHE_NUMBER
+import test.DELETE_CACHE
 import java.lang.Exception
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -59,7 +61,7 @@ class MySettingsFragment : PreferenceFragmentCompat() , Preference.OnPreferenceC
         }
 
         //cachde number of images
-        cacheNumber.summary = "Caching upto ${Prefs.getString(CACHE_NUMBER , "25")} images"
+        cacheNumber.summary = "Caching upto ${Prefs.getString(CACHE_NUMBER, "25")} images"
 
         // listeners
 
@@ -93,7 +95,9 @@ class MySettingsFragment : PreferenceFragmentCompat() , Preference.OnPreferenceC
                 if (newValue){
                     setWallpaper()
                 }else{
-                    WorkManager.getInstance(context!!).cancelWorkById(UUID.fromString(Prefs.getString(AUTO_WALLPAPER , "")))
+                    WorkManager.getInstance(context!!).cancelWorkById(UUID.fromString(
+                        Prefs.getString(
+                            AUTO_WALLPAPER, "")))
                     Prefs.remove(AUTO_WALLPAPER)
 
                 }
@@ -143,7 +147,8 @@ class MySettingsFragment : PreferenceFragmentCompat() , Preference.OnPreferenceC
 
     private fun setWallpaper(){
         if (Prefs.contains(AUTO_WALLPAPER)){
-            WorkManager.getInstance(context!!).cancelWorkById(UUID.fromString(Prefs.getString(AUTO_WALLPAPER, "")))
+            WorkManager.getInstance(context!!).cancelWorkById(UUID.fromString(Prefs.getString(
+                AUTO_WALLPAPER, "")))
             Prefs.remove(AUTO_WALLPAPER)
         }
 
@@ -159,7 +164,7 @@ class MySettingsFragment : PreferenceFragmentCompat() , Preference.OnPreferenceC
             .setConstraints(builder).build()
 
         WorkManager.getInstance(context!!).enqueue(uploadWorkRequest)
-        Prefs.putAny(AUTO_WALLPAPER , uploadWorkRequest.id.toString())
+        Prefs.putAny(AUTO_WALLPAPER, uploadWorkRequest.id.toString())
 
         // interval
 

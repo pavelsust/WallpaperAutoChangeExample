@@ -9,8 +9,8 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.view.WindowManager
-import com.funapp.wallpaperautochangeexample.reusables.CACHED
-import com.funapp.wallpaperautochangeexample.reusables.Config
+import test.CACHED
+import test.Config
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.apache.commons.io.comparator.LastModifiedFileComparator
