@@ -1,10 +1,9 @@
-package com.funapp.wallpaperautochangeexample.handlers
+package test.handlers
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import java.io.File
 import java.io.FileOutputStream
-import javax.security.auth.callback.Callback
 
 object StorageHandler {
 

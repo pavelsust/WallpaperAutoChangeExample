@@ -1,4 +1,4 @@
-package com.funapp.wallpaperautochangeexample.handlers
+package test.handlers
 
 import android.content.Context
 import android.graphics.Bitmap

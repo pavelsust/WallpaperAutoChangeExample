@@ -1,13 +1,13 @@
-package com.funapp.wallpaperautochangeexample.handlers
+package test.handlers
 
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
 import com.funapp.wallpaperautochangeexample.R
-import test.RATE
-import com.funapp.wallpaperautochangeexample.functions.putAny
 import test.Prefs
+import test.RATE
+import test.functions.putAny
 
 object DialogHandler {
 

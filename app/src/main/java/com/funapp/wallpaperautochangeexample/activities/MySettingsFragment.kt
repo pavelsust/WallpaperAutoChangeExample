@@ -10,11 +10,11 @@ import androidx.work.WorkManager
 import com.funapp.wallpaperautochangeexample.BuildConfig
 import test.Prefs
 import com.funapp.wallpaperautochangeexample.R
-import com.funapp.wallpaperautochangeexample.functions.F
-import com.funapp.wallpaperautochangeexample.functions.putAny
-import com.funapp.wallpaperautochangeexample.functions.remove
-import com.funapp.wallpaperautochangeexample.functions.toast
-import com.funapp.wallpaperautochangeexample.handlers.DialogHandler
+import test.functions.F
+import test.functions.putAny
+import test.functions.remove
+import test.functions.toast
+import test.handlers.DialogHandler
 import com.funapp.wallpaperautochangeexample.workers.AutoWallpaper
 import test.AUTO_WALLPAPER
 import test.CACHE_NUMBER

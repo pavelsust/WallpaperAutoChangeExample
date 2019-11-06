@@ -1,4 +1,4 @@
-package com.funapp.wallpaperautochangeexample.handlers
+package test.handlers
 
 import android.app.WallpaperManager
 import android.content.Context

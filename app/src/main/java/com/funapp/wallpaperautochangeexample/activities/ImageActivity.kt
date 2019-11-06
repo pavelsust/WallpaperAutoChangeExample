@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.funapp.wallpaperautochangeexample.R
-import com.funapp.wallpaperautochangeexample.functions.F
-import com.funapp.wallpaperautochangeexample.functions.toast
-import com.funapp.wallpaperautochangeexample.handlers.StorageHandler
-import com.funapp.wallpaperautochangeexample.handlers.WallpaperHandler
+import test.functions.F
+import test.functions.toast
+import test.handlers.StorageHandler
+import test.handlers.WallpaperHandler
 import test.Config
 import test.IMAGE
 import kotlinx.android.synthetic.main.activity_image.*

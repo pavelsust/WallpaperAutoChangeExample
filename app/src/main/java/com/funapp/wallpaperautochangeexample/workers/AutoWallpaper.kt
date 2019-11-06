@@ -22,11 +22,11 @@ import android.os.Looper
 import androidx.concurrent.futures.CallbackToFutureAdapter
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.funapp.wallpaperautochangeexample.functions.F
-import com.funapp.wallpaperautochangeexample.functions.logd
-import com.funapp.wallpaperautochangeexample.functions.toast
-import com.funapp.wallpaperautochangeexample.handlers.ImageHandler
-import com.funapp.wallpaperautochangeexample.handlers.StorageHandler
+import test.functions.F
+import test.functions.logd
+import test.functions.toast
+import test.handlers.ImageHandler
+import test.handlers.StorageHandler
 import test.CACHED
 import test.CACHE_NUMBER
 import test.Prefs

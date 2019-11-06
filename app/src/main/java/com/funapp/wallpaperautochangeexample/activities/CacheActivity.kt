@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.funapp.wallpaperautochangeexample.R
 import com.funapp.wallpaperautochangeexample.adapter.AdapterImage
-import com.funapp.wallpaperautochangeexample.functions.F
-import com.funapp.wallpaperautochangeexample.functions.gone
+import test.functions.F
+import test.functions.gone
 import test.CACHED
 import kotlinx.android.synthetic.main.activity_cached.*
 import org.apache.commons.io.comparator.LastModifiedFileComparator

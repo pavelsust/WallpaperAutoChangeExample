@@ -5,8 +5,8 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.funapp.wallpaperautochangeexample.activities.ImageActivity
-import com.funapp.wallpaperautochangeexample.functions.F
-import com.funapp.wallpaperautochangeexample.functions.openNewActivity
+import test.functions.F
+import test.functions.openNewActivity
 import test.IMAGE
 import kotlinx.android.synthetic.main.inflator_image.view.*
 import java.io.File

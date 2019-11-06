@@ -1,4 +1,4 @@
-package com.funapp.wallpaperautochangeexample.functions
+package test.functions
 
 import android.content.Context
 import android.content.Intent
