@@ -8,7 +8,6 @@
     tools:context=".activities.WallpaperActivity">
 
 
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,11 +35,9 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-
             <!-- Settings -->
-
             <FrameLayout
-                android:id="@+id/settings"
+                android:id="@+id/wallpaper_settings"
                 android:layout_width="36dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -57,7 +54,7 @@
             <!-- Refresh -->
 
             <FrameLayout
-                android:id="@+id/refresh"
+                android:id="@+id/wallpaper_refresh"
                 android:layout_width="36dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -75,6 +72,7 @@
             <!--Wallpaper -->
 
             <FrameLayout
+                android:id="@+id/wallpaper_setWallpaper"
                 android:layout_width="36dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -91,6 +89,7 @@
             <!-- Download -->
 
             <FrameLayout
+                android:id="@+id/wallpaper_download"
                 android:layout_width="36dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">

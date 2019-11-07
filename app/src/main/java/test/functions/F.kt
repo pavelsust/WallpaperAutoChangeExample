@@ -133,7 +133,7 @@ object F {
         }
     }
 
-    fun compareBitmaps(bitmap1: Bitmap, bitmap2: Bitmap, callback: (Boolean) -> Unit) {
+    fun compareBitmaps(bitmap1: Bitmap?, bitmap2: Bitmap?, callback: (Boolean) -> Unit) {
 
         if (bitmap1 == null || bitmap2 == null) {
             callback(false)

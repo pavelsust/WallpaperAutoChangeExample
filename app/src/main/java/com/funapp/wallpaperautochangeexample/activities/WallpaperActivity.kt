@@ -1,9 +1,12 @@
 package com.funapp.wallpaperautochangeexample.activities
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.funapp.wallpaperautochangeexample.R
 import kotlinx.android.synthetic.main.activity_image.*
@@ -20,85 +23,161 @@ import test.handlers.StorageHandler
 import test.handlers.WallpaperHandler
 import java.io.File
 
-class WallpaperActivity : AppCompatActivity()  , View.OnClickListener{
-
-
+class WallpaperActivity : AppCompatActivity(), View.OnClickListener {
     private var bitmap: Bitmap? = null
-
     var refreshing = false
 
-
+    // on create
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wallpaper)
 
+
+        // check for temp image & apply
         if (File(cacheDir, "homescreen.jpg").exists()) {
-            bitmap = StorageHandler.getBitmapFromFile((File(cacheDir, "homescreen.jpg")))
+            bitmap = StorageHandler.getBitmapFromFile(File(cacheDir, "homescreen.jpg"))
             bgWallpaper.setImageBitmap(bitmap)
         } else {
+            // if no temp image then auto load image
             refreshing = true
             mask.show()
             progress.show()
             getImage()
         }
 
-        refresh.setOnClickListener(this)
-        settings.setOnClickListener(this)
-        setWallpaper.setOnClickListener(this)
-        download.setOnClickListener(this)
+        wallpaper_refresh.setOnClickListener(this)
+        wallpaper_settings.setOnClickListener(this)
+        wallpaper_setWallpaper.setOnClickListener(this)
+        wallpaper_download.setOnClickListener(this)
 
         // rate us dialog
+        if (!Prefs.contains(RATE))
+            DialogHandler.rateUs(this) {
+                Prefs.putAny(RATE, true)
+                F.startWeb(this, Config.PLAY_STORE)
+                DialogHandler.dismiss()
 
-        if (!Prefs.contains(RATE)){
-           DialogHandler.rateUs(this){
-               Prefs.putAny(RATE , true)
-               F.startWeb(this , Config.PLAY_STORE)
-               DialogHandler.dismiss()
-           }
+
+
+            }
+    }
+
+    // fab click handling
+    override fun onClick(v: View) {
+        when (v.id) {
+
+            wallpaper_refresh.id -> {
+                if (!refreshing) {
+                    refreshing = true
+                    mask.show()
+                    progress.show()
+                    getImage()
+                } else
+                    toast("In Progress")
+            }
+
+            wallpaper_settings.id -> {
+                Toast.makeText(applicationContext , "Click" , Toast.LENGTH_SHORT).show()
+                activityOpen(SettingActivity::class.java)
+            }
+
+            wallpaper_setWallpaper.id -> {
+
+                // check permissions
+                Permissions.askWriteExternalStoragePermission(this) { e, r ->
+                    e?.let {
+                        toast("kindly provide storage permissions")
+                    }
+                    r?.let {
+                        F.mkdir()
+                        if (!refreshing && bitmap != null) {
+                            toast("please wait")
+                            GlobalScope.launch {
+                                val file = File(Config.DEFEAULT_DOWNLOAD_PATH, "${F.shortid()}.jpg")
+                                StorageHandler.storeBitmapInFile(bitmap!!, file)
+                                WallpaperHandler.setWallpaper(this@WallpaperActivity, bitmap!!)
+                                // make available for media scanner
+                                MediaScannerConnection.scanFile(this@WallpaperActivity, arrayOf(file.toString()), arrayOf("image/jpeg"), null)
+
+                                runOnUiThread {
+                                    toast("wallpaper applied successfully")
+                                }
+
+                            }
+                        } else
+                            toast("kindly wait for wallpaper to load")
+                    }
+                }
+            }
+
+            wallpaper_download.id -> {
+                Permissions.askWriteExternalStoragePermission(this) { e, r ->
+                    e?.let {
+                        toast("kindly provide storage permissions")
+                    }
+                    r?.let {
+                        F.mkdir()
+                        if (!refreshing && bitmap != null) {
+                            toast("please wait")
+                            GlobalScope.launch {
+                                val file = File(Config.DEFEAULT_DOWNLOAD_PATH, "${F.shortid()}.jpg")
+                                StorageHandler.storeBitmapInFile(bitmap!!, file)
+
+                                // make available for media scanner
+                                MediaScannerConnection.scanFile(this@WallpaperActivity, arrayOf(file.toString()), arrayOf("image/jpeg"), null)
+
+                                runOnUiThread {
+                                    toast("image saved successfully")
+                                }
+                            }
+                        } else
+                            toast("kindly wait for wallpaper to load")
+                    }
+                }
+            }
         }
     }
 
-
     /**
-     *  get new Images
+     * get new image
      */
-
     private fun getImage() {
-        ImageHandler.getBitmapWallpaper(
-            this,
-            "https://source.unsplash.com/random/1440x3040/?${Prefs.getString("search", "")}"
-        ) {
+
+        Log.d("MAINACTIVITY" , ""+bitmap)
+
+        ImageHandler.getBitmapWallpaper(this, "https://source.unsplash.com/random/1440x3040/?${Prefs.getString("search", "")}") {
             runOnUiThread {
                 if (it != null) {
-                    F.compareBitmaps(it, bitmap!!) { com ->
-                        if (com) {
-                            getImage() // get image again if received the same one
-                        } else {
-                            bitmap = it
-                            bgWallpaper.setImageBitmap(it)
+                    F.compareBitmaps(it, bitmap) { com ->
+                        runOnUiThread {
+                            if (com)
+                                getImage() // get image again if received the same one
+                            else {
+                                bitmap = it
+                                bgWallpaper.setImageBitmap(it)
 
-                            // saved bitmap into the temp directory
-                            StorageHandler.storeBitmapInFile(it, File(cacheDir, "homescreen.jpg"))
+                                // save bitmap in temp directory
+                                StorageHandler.storeBitmapInFile(it, File(cacheDir, "homescreen.jpg"))
 
-                            // save bitmap in cached directory
+                                // save bitmap in cached directory
+                                val cached = File(filesDir, CACHED)
+                                StorageHandler.storeBitmapInFile(it, File(cached, "${F.shortid()}.jpg"))
 
-                            val cached = File(filesDir, CACHED)
-                            StorageHandler.storeBitmapInFile(it, File(cached, "${F.shortid()}.jpg"))
+                                // if extra images in cached then delete them
+                                F.deleteCached(this, Prefs.getString(CACHE_NUMBER, "25")!!.toInt())
 
-                            // if extra images in cached then delete them
+                                // change wallpaper if allowed
+                                if (Prefs.getBoolean(WALL_CHANGE, false))
+                                    WallpaperHandler.setWallpaper(this, it)
 
-                            F.deleteCached(this, Prefs.getString(CACHE_NUMBER, "25")!!.toInt())
-
-                            if (Prefs.getBoolean(WALL_CHANGE, false)) {
-                                WallpaperHandler.setWallpaper(this, it)
                                 mask.gone()
+                                progress.gone()
                                 refreshing = false
                             }
-
                         }
                     }
-                }else{
-                    toast("failed to fetch images")
+                } else { // if bitmap is null
+                    toast("failed to fetch image")
                     mask.gone()
                     progress.gone()
                     refreshing = false
@@ -107,81 +186,7 @@ class WallpaperActivity : AppCompatActivity()  , View.OnClickListener{
         }
     }
 
-    override fun onClick(v: View) {
-        when(v.id){
-            refresh.id ->{
-                if (!refreshing){
-                    refreshing = true
-                    mask.show()
-                    progress.show()
-                    getImage()
-                }else{
-                    toast("In Progress")
-                }
-            }
-
-            settings.id ->{
-                openNewActivity(SettingActivity::class.java)
-            }
-
-            setWallpaper.id ->{
-                Permissions.askWriteExternalStoragePermission(this){e , r ->
-                    e.let {
-                        toast("Kindly provide storage permissions")
-                    }
-
-                    r.let {
-                        F.mkdir()
-                        if (!refreshing && bitmap!=null){
-                            toast("Please wait")
-                            GlobalScope.launch {
-                                val file = File(Config.DEFEAULT_DOWNLOAD_PATH , "${F.shortid()}.jpg")
-                                StorageHandler.storeBitmapInFile(bitmap!! , file)
-                                WallpaperHandler.setWallpaper(this@WallpaperActivity , bitmap!!)
-
-                                // make available for media scanner
-
-                                MediaScannerConnection.scanFile(this@WallpaperActivity , arrayOf(file.toString()) , arrayOf("images/jpeg") , null)
-                                runOnUiThread {
-                                    toast("Wallpaper applied successfully")
-                                }
-                            }
-                        }else{
-                            toast("Kindly wait for wallpaper to load")
-                        }
-                    }
-
-
-                }
-            }
-
-            download.id ->{
-                Permissions.askWriteExternalStoragePermission(this){e , r ->
-                    e.let {
-                        toast("Please provide storage permission")
-                    }
-                    r.let {
-                        F.mkdir()
-                        if (!refreshing && bitmap!=null){
-                            toast("Please wait")
-                            GlobalScope.launch {
-                                val file = File(Config.DEFEAULT_DOWNLOAD_PATH , "${F.shortid()}.jpg")
-                                StorageHandler.storeBitmapInFile(bitmap!! , file)
-
-                                // make available for media scanner
-                                MediaScannerConnection.scanFile(this@WallpaperActivity , arrayOf(file.toString()) , arrayOf("images/jpeg") , null)
-                                runOnUiThread {
-                                    toast("Image saved successfully")
-                                }
-                            }
-                        }else{
-                            toast("Kindly wait for wallpaper to load")
-                        }
-                    }
-
-                }
-            }
-        }
+    fun <T> activityOpen(it:Class<T>) = Intent().apply {
+        startActivity(Intent(this@WallpaperActivity , it))
     }
-
 }
