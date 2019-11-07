@@ -15,28 +15,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--Auto Wallpaper-->
-    <!--<FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
-            android:text="Auto Wallpaper Changing"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/settingAutoWallpaper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="16dp" />
-
-    </FrameLayout>-->
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
