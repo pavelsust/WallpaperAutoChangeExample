@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_image.*
 import kotlinx.android.synthetic.main.activity_wallpaper.*
 import kotlinx.android.synthetic.main.activity_wallpaper.bgWallpaper
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.sourcei.android.permissions.Permissions
 import test.*
@@ -60,6 +61,18 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener {
 
 
             }
+
+        GlobalScope.launch {
+            println("launched 1")
+            //delay(3000)
+            Thread.sleep(3000)
+            println("final coroutines")
+        }
+
+
+        GlobalScope.launch {
+            println("launched 2")
+        }
     }
 
     // fab click handling
