@@ -2,58 +2,91 @@ package com.wallpaper
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.net.UrlQuerySanitizer
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.assist.ImageSize
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.consumesAll
 import kotlinx.coroutines.launch
-import org.sourcei.android.permissions.utils.Config.callback
-import java.lang.ref.WeakReference
+import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import javax.security.auth.callback.Callback
+import java.lang.ref.WeakReference as WeakReference1
 
 object WallpaperPropertiesLoaderTask {
 
+    var wallpaperItem: WallpaperItem? = null
+    var wallpaperCallback: WeakReference1<CallbackWallpaper>? = null
+    var context: WeakReference1<Context>? = null
 
-     var mWallpaper: WallpaperItem? = null
-     var mCallback: WeakReference<Callback>? = null
-     var mContext: WeakReference<Context>? = null
-
-    fun prepare(context: Context , mWallpaperItem: WallpaperItem){
-        this.mContext = WeakReference(context)
-        this.mWallpaper = mWallpaperItem
-
+    fun init(context: Context): WallpaperPropertiesLoaderTask {
+        this.context = WeakReference1(context)
+        return WallpaperPropertiesLoaderTask
     }
 
+    fun wallpaper(wallpaper: WallpaperItem): WallpaperPropertiesLoaderTask {
+        this.wallpaperItem = wallpaper
+        return this
+    }
 
+    fun callbackWallpaper(wallpaperCallBack: CallbackWallpaper): WallpaperPropertiesLoaderTask {
+        wallpaperCallback = WeakReference1(wallpaperCallBack)
+        return this
+    }
 
+    fun prepare(context: Context): WallpaperPropertiesLoaderTask {
+        return init(context)
+    }
 
-    fun start(){
+    fun start(callback: (Boolean) -> Unit) {
         GlobalScope.launch {
-
-            if (wallpaperItem?.imageDimension!=null && wallpaperItem?.mimeType!=null&& wallpaperItem!!.imageSize>0){
+            if (wallpaperItem == null) {
                 callback(false)
             }
 
-            var options = BitmapFactory.Options()
+            if (wallpaperItem?.imageDimension != null && wallpaperItem?.mimeType != null && wallpaperItem!!.imageSize!! > 0) {
+                callback(false)
+            }
+
+            val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
 
-            var url = URL(wallpaperItem?.imageLink)
+            val url = URL(wallpaperItem?.imageLink)
+            val httpConnection = url.openConnection() as HttpURLConnection
+            httpConnection.connectTimeout = 1500
 
-            val connection = url.openConnection() as HttpURLConnection
-            connection.connectTimeout = 15000
+            if (httpConnection.responseCode == HttpURLConnection.HTTP_OK) {
+                val stream: InputStream = httpConnection.inputStream
+                BitmapFactory.decodeStream(stream, null, options)
 
+                val imageSize = ImageSize(options.outWidth, options.outHeight)
+                wallpaperItem?.imageDimension = imageSize
+                wallpaperItem?.mimeType = options.outMimeType
+
+                var contentLength = httpConnection.contentLength
+                if (contentLength > 0) {
+                    wallpaperItem?.imageSize = contentLength
+                }
+                stream.close()
+
+
+                if (wallpaperItem!!.imageSize!! <= 0) {
+                    val target = ImageLoader.getInstance().diskCache.get(wallpaperItem?.imageLink)
+                    if (target.exists()) {
+                        wallpaperItem?.imageSize = target.length().toInt()
+                    }
+                }
+
+                if (wallpaperCallback != null && wallpaperCallback?.get() != null) {
+                    wallpaperCallback!!.get()?.onPropertiesReceived(wallpaperItem!!)
+                }
+
+                callback(true)
+
+            }
         }
     }
-}
 
-fun main(){
-    var context: Context?
-    var wallpaperItem:WallpaperItem?=null
-
-    WallpaperPropertiesLoaderTask.run {
-
-        prepare(context!! , wallpaperItem!!).start()
-        start()
+    interface CallbackWallpaper {
+        fun onPropertiesReceived(wallpaper: WallpaperItem)
     }
+
 }

@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.funapp.wallpaperautochangeexample.R
+import com.wallpaper.WallpaperItem
+import com.wallpaper.WallpaperPropertiesLoaderTask
 import kotlinx.android.synthetic.main.activity_image.*
 import kotlinx.android.synthetic.main.activity_wallpaper.*
 import kotlinx.android.synthetic.main.activity_wallpaper.bgWallpaper
@@ -24,7 +26,9 @@ import test.handlers.StorageHandler
 import test.handlers.WallpaperHandler
 import java.io.File
 
-class WallpaperActivity : AppCompatActivity(), View.OnClickListener {
+class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperPropertiesLoaderTask.CallbackWallpaper{
+
+
     private var bitmap: Bitmap? = null
     var refreshing = false
 
@@ -62,17 +66,19 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener {
 
             }
 
-        GlobalScope.launch {
-            println("launched 1")
-            //delay(3000)
-            Thread.sleep(3000)
-            println("final coroutines")
-        }
+        var wallpaper = WallpaperItem("https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
 
+        WallpaperPropertiesLoaderTask.prepare(applicationContext)
+            .wallpaper(wallpaper)
+            .callbackWallpaper(this)
+            .start {
+                if (it){
 
-        GlobalScope.launch {
-            println("launched 2")
-        }
+                    runOnUiThread {
+                        Log.d("WALLPAPER_ITEM" , ""+it)
+                    }
+                }
+            }
     }
 
     // fab click handling
@@ -202,4 +208,11 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener {
     fun <T> activityOpen(it:Class<T>) = Intent().apply {
         startActivity(Intent(this@WallpaperActivity , it))
     }
+
+    override fun onPropertiesReceived(wallpaper: WallpaperItem) {
+        runOnUiThread {
+            Log.d("WALLPAPER_ITEM" , ""+wallpaper.mimeType+" "+wallpaper.imageDimension)
+        }
+    }
+
 }
