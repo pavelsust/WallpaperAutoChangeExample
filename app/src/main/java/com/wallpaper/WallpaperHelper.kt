@@ -24,6 +24,11 @@ object WallpaperHelper {
             }
         }
 
+
+    /**
+     *  it return's the device display size
+     *
+     */
     fun getTargetSize(context: Context): ImageSize{
         var point: Point = WindowHelper.getScreenSize(context)
         var targetHeight: Int = point.y
@@ -48,6 +53,11 @@ object WallpaperHelper {
         WllpaperExtension.wallpaperMkdr()
         return File(WllpaperExtension.WALLPAPER_PATH)
     }
+
+    /**
+     * ReactF holds the four point of dimension
+     *
+     */
 
     @Nullable
     fun getScaledRestF(rectf : RectF? , heightFactor: Float , widthFactor: Float): RectF{
