@@ -3,9 +3,7 @@ package com.wallpaper
 import android.app.Activity
 import android.app.WallpaperManager
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Point
-import android.graphics.RectF
+import android.graphics.*
 import android.os.Build
 import android.util.Log
 import com.danimahardhika.android.helpers.core.ColorHelper
@@ -201,16 +199,7 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
 
                     when(apply){
                         is Apply.HOMESCREEN -> {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                WallpaperManager.getInstance(context?.get()!!.applicationContext)
-                                    .setBitmap(
-                                        bitmap, null, true, WallpaperManager.FLAG_SYSTEM
-                                    )
-
-                            }
-
-                            WallpaperManager.getInstance(context?.get()!!.applicationContext)
-                                .setBitmap(bitmap)
+                          setHomeWallpaper(bitmap)
                         }
 
                         is Apply.LOCKSCREEN -> {
@@ -234,6 +223,45 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
 
                             }
                         }
+
+                        is Apply.HOME_CROP_WALLPAPER ->{
+                            /*
+                                 * Cropping bitmap
+                                 */
+                            val targetSize = WallpaperHelper.getTargetSize(context?.get()!!)
+
+                            val targetWidth = java.lang.Double.valueOf(
+                                loadedBitmap.height.toDouble() / targetSize.height.toDouble() * targetSize.width.toDouble()
+                            ).toInt()
+
+                            bitmap = Bitmap.createBitmap(
+                                targetWidth,
+                                loadedBitmap.height,
+                                loadedBitmap.config
+                            )
+                            val paint = Paint()
+                            paint.isFilterBitmap = true
+                            paint.isAntiAlias = true
+                            paint.isDither = true
+
+                            val canvas = Canvas(bitmap)
+                            canvas.drawBitmap(loadedBitmap, null, adjustedRectF!!, paint)
+
+                            val scale = targetSize.height.toFloat() / bitmap.height.toFloat()
+                            if (scale < 1f) {
+
+                                val resizedWidth =
+                                    java.lang.Float.valueOf(bitmap.width.toFloat() * scale).toInt()
+                                bitmap = Bitmap.createScaledBitmap(
+                                    bitmap,
+                                    resizedWidth,
+                                    targetSize.height,
+                                    true
+                                )
+                            }
+
+                            setHomeWallpaper(bitmap)
+                        }
                     }
 
                 } catch (e: OutOfMemoryError) {
@@ -243,6 +271,20 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
             }
         }
 
+    }
+
+
+    fun setHomeWallpaper(bitmap: Bitmap){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            WallpaperManager.getInstance(context?.get()!!.applicationContext)
+                .setBitmap(
+                    bitmap, null, true, WallpaperManager.FLAG_SYSTEM
+                )
+
+        }
+
+        WallpaperManager.getInstance(context?.get()!!.applicationContext)
+            .setBitmap(bitmap)
     }
 
     fun getImageLoader(): ImageLoader {
@@ -259,6 +301,7 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
         class LOCKSCREEN : Apply()
         class HOMESCREEN : Apply()
         class HOMESCREEN_LOCKSCREEN() : Apply()
+        class HOME_CROP_WALLPAPER(): Apply()
     }
 
 }

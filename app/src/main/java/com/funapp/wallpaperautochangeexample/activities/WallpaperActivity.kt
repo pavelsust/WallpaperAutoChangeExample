@@ -88,7 +88,7 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
 
         WallpaperApplyTask.prepare(this)
             .wallpaper(wallpaper)
-            .to(WallpaperApplyTask.Apply.HOMESCREEN_LOCKSCREEN())
+            .to(WallpaperApplyTask.Apply.HOME_CROP_WALLPAPER())
             .start {
                 Log.d("Message", "Done Wallpaper")
             }
