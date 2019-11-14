@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.funapp.wallpaperautochangeexample.R
+import com.wallpaper.WallpaperApplyTask
 import com.wallpaper.WallpaperItem
 import com.wallpaper.WallpaperPropertiesLoaderTask
 import kotlinx.android.synthetic.main.activity_image.*
@@ -25,7 +26,6 @@ import test.handlers.ImageHandler
 import test.handlers.StorageHandler
 import test.handlers.WallpaperHandler
 import java.io.File
-
 class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperPropertiesLoaderTask.CallbackWallpaper{
 
 
@@ -35,7 +35,7 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
     // on create
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wallpaper)
+        setContentView(com.funapp.wallpaperautochangeexample.R.layout.activity_wallpaper)
 
 
         // check for temp image & apply
@@ -66,8 +66,13 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
 
             }
 
-        var wallpaper = WallpaperItem("https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
+        //var wallpaper = WallpaperItem("http://demo-wallpaper.bollywoodgaana.com/url_lg/7566.jpg")
 
+        //https@ //images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500
+
+
+        var wallpaper = WallpaperItem("https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
+        /*
         WallpaperPropertiesLoaderTask.prepare(applicationContext)
             .wallpaper(wallpaper)
             .callbackWallpaper(this)
@@ -78,6 +83,14 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
                         Log.d("WALLPAPER_ITEM" , ""+it)
                     }
                 }
+            }
+            */
+
+        WallpaperApplyTask.prepare(this)
+            .wallpaper(wallpaper)
+            .to(WallpaperApplyTask.Apply.HOMESCREEN_LOCKSCREEN())
+            .start {
+                Log.d("Message", "Done Wallpaper")
             }
     }
 
