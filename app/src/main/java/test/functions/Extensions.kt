@@ -65,23 +65,6 @@ fun calculateHcf(width: Int , height: Int): Int{
 
 //get display ratio a/b
 fun Context.displayRatio(): Pair<Int, Int> {
-    /*fun gcd(p: Int, q: Int): Int {
-        return if (q == 0) p;
-        else gcd(q, p % q);
-    }
-
-    val point = F.displayDimensions(this)
-    val x = point.x
-    val y = point.y
-    val gcd = gcd(x, y)
-
-    val a = x / gcd
-    val b = y / gcd
-
-    return if (x > y)
-        Pair(a, b)
-    else
-        Pair(b, a)*/
 
     fun calculateHcf(width1: Int, height1: Int): Int {
         var width = width1

@@ -2,38 +2,47 @@ package com.wallpaper
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
+import android.net.Uri
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.assist.ImageSize
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 import java.io.InputStream
+import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
 import java.net.URL
-import java.lang.ref.WeakReference as WeakReference1
+import org.apache.commons.io.FileUtils.openInputStream
+import android.graphics.Bitmap
 
-object WallpaperPropertiesLoaderTask {
+
+
+
+
+object WallpaperPropertieLocalLoaderTask {
+
+
 
     var wallpaperItem: WallpaperItem? = null
-    var wallpaperCallback: WeakReference1<CallbackWallpaper>? = null
-    var context: WeakReference1<Context>? = null
+    var wallpaperCallback: WeakReference<CallbackWallpaperLocal>? = null
+    var context: WeakReference<Context>? = null
 
-    fun init(context: Context): WallpaperPropertiesLoaderTask {
-        this.context = WeakReference1(context)
-        return WallpaperPropertiesLoaderTask
+    fun init(context: Context): WallpaperPropertieLocalLoaderTask {
+        this.context = WeakReference(context)
+        return WallpaperPropertieLocalLoaderTask
     }
 
-    fun wallpaper(wallpaper: WallpaperItem): WallpaperPropertiesLoaderTask {
+    fun wallpaper(wallpaper: WallpaperItem): WallpaperPropertieLocalLoaderTask {
         this.wallpaperItem = wallpaper
         return this
     }
 
-    fun callbackWallpaper(wallpaperCallBack: CallbackWallpaper): WallpaperPropertiesLoaderTask {
-        wallpaperCallback = WeakReference1(wallpaperCallBack)
+    fun callbackWallpaper(wallpaperCallBack: CallbackWallpaperLocal): WallpaperPropertieLocalLoaderTask {
+        wallpaperCallback = WeakReference(wallpaperCallBack)
         return this
     }
 
-    fun prepare(context: Context): WallpaperPropertiesLoaderTask {
+    fun prepare(context: Context): WallpaperPropertieLocalLoaderTask {
         return init(context)
     }
 
@@ -49,11 +58,17 @@ object WallpaperPropertiesLoaderTask {
 
             val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
+            BitmapFactory.decodeFile(wallpaperItem?.imageLink , options)
 
-            val url = URL(wallpaperItem?.imageLink)
+            val imageSize = ImageSize(options.outWidth, options.outHeight)
 
-            val httpConnection = url.openConnection() as HttpURLConnection
-            httpConnection.connectTimeout = 1500
+            wallpaperItem?.imageDimension = imageSize
+            wallpaperItem?.mimeType = options.outMimeType
+
+            val imageInByte = options.toByteArray()
+            val lengthbmp = imageInByte.size.toLong()
+
+
 
             if (httpConnection.responseCode == HttpURLConnection.HTTP_OK) {
                 val stream: InputStream = httpConnection.inputStream
@@ -65,14 +80,12 @@ object WallpaperPropertiesLoaderTask {
                 wallpaperItem?.imageDimension = imageSize
                 wallpaperItem?.mimeType = options.outMimeType
 
-                Log.d("Message" , "from option"+options.inSampleSize)
-                Log.d("Message" , "from input"+httpConnection.contentLength)
-
                 var contentLength = httpConnection.contentLength
                 if (contentLength > 0) {
                     wallpaperItem?.imageSize = contentLength
                 }
                 stream.close()
+
 
                 if (wallpaperItem!!.imageSize!! <= 0) {
                     val target = ImageLoader.getInstance().diskCache.get(wallpaperItem?.imageLink)
@@ -91,8 +104,9 @@ object WallpaperPropertiesLoaderTask {
         }
     }
 
-    interface CallbackWallpaper {
+    interface CallbackWallpaperLocal {
         fun onPropertiesReceived(wallpaper: WallpaperItem)
     }
+
 
 }
