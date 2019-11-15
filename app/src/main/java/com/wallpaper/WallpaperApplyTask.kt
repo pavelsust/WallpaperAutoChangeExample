@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import com.danimahardhika.android.helpers.core.ColorHelper
 import com.danimahardhika.android.helpers.core.WindowHelper
 import com.nostra13.universalimageloader.core.ImageLoader
@@ -16,13 +17,17 @@ import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 import java.util.*
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.runBlocking
 
-object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
+object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper,
+    WallpaperPropertieLocalLoaderTask.CallbackWallpaperLocal {
 
     var context: WeakReference<Context>? = null
     var apply: Apply? = null
     var rectF: RectF? = null
     var wallpaperItem: WallpaperItem? = null
+    var onBitmapCall : OnBitmapCall?=null
 
 
     fun applyTask(context: Context): WallpaperApplyTask {
@@ -44,12 +49,27 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
         return applyTask(context)
     }
 
+    fun showBitmap(onBitmapCall: OnBitmapCall): WallpaperApplyTask{
+        this.onBitmapCall = onBitmapCall
+        return this
+    }
+
     fun start(callback: (Boolean) -> Unit) {
         GlobalScope.launch {
             var color = wallpaperItem?.color
-            color = ColorHelper.getAttributeColor(context?.get(), com.funapp.wallpaperautochangeexample.R.attr.colorAccent)
+            color = ColorHelper.getAttributeColor(
+                context?.get(),
+                com.funapp.wallpaperautochangeexample.R.attr.colorAccent
+            )
 
             if (wallpaperItem?.imageDimension == null) {
+
+                /**
+                 *  This is for internet
+                 */
+
+
+
                 WallpaperPropertiesLoaderTask.prepare(context?.get()!!)
                     .wallpaper(wallpaperItem!!)
                     .callbackWallpaper(this@WallpaperApplyTask)
@@ -58,6 +78,19 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
                             Log.d("WALLPAPER_ITEM", "" + it)
                         }
                     }
+
+                /*
+                WallpaperPropertieLocalLoaderTask.prepare(context?.get()!!)
+                    .wallpaper(wallpaperItem!!)
+                    .callbackWallpaper(this@WallpaperApplyTask)
+                    .start {
+                        if (it) {
+                            Log.d("WALLPAPER_ITEM", "" + it)
+                        }
+                    }
+                   
+                 */
+
             }
 
         }
@@ -65,8 +98,8 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
 
     override fun onPropertiesReceived(wallpaper: WallpaperItem) {
         wallpaperItem = wallpaper
-        if (wallpaperItem?.imageDimension == null){
-            Log.d("MESSAGE" , "wallpaper apply cancled")
+        if (wallpaperItem?.imageDimension == null) {
+            Log.d("MESSAGE", "wallpaper apply cancled")
             if (context?.get() == null) return
             if (context?.get() is Activity) {
                 if ((context?.get() as Activity).isFinishing)
@@ -85,19 +118,22 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
     }
 
 
-    fun wallpaperExecute(){
+    fun wallpaperExecute() {
 
         var job = GlobalScope.launch {
             var imageSize = WallpaperHelper.getTargetSize(context?.get()!!)
 
-            if (rectF !=null && Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT){
+            if (rectF != null && Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
                 var point: Point = WindowHelper.getScreenSize(context?.get()!!)
-                val height = point.y - WindowHelper.getStatusBarHeight(context?.get()!!) - WindowHelper.getNavigationBarHeight(context?.get()!!)
+                val height =
+                    point.y - WindowHelper.getStatusBarHeight(context?.get()!!) - WindowHelper.getNavigationBarHeight(
+                        context?.get()!!
+                    )
                 val heightFactor = imageSize.height.toFloat() / height.toFloat()
                 rectF = WallpaperHelper.getScaledRestF(rectF, heightFactor, 1f)
             }
 
-            if (rectF==null){
+            if (rectF == null) {
 
                 /**
                  *  Create a center crop if wallpaper applied from grid. not opening the preview
@@ -117,18 +153,17 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
             }
 
             var adjustedSize = imageSize
-            Log.d("Message" , ""+adjustedSize)
+            Log.d("Message", "" + adjustedSize)
             var adjustedRectF = rectF
 
-            var scaleFactor =
-                wallpaperItem?.imageDimension?.height?.toFloat()!! / imageSize.height.toFloat()
+            var scaleFactor = wallpaperItem?.imageDimension?.height?.toFloat()!! / imageSize.height.toFloat()
 
 
-            Log.d("Message" , "Scale factor $scaleFactor")
+            Log.d("Message", "Scale factor $scaleFactor")
 
             // scale factor is working
 
-            if (scaleFactor >1f){
+            if (scaleFactor > 1f) {
 
                 /**
                  *  Applying original wallpaper size cause a problem
@@ -141,8 +176,9 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
                  *  adjustSize = new ImageSize(width , height)
                  */
 
-                var widthScaleFactor = imageSize.height.toFloat() / wallpaperItem?.imageDimension?.height as Float
-                val adjustedWidth = java.lang.Float.valueOf(wallpaperItem?.imageDimension?.width as Float * widthScaleFactor).toInt()
+                var widthScaleFactor = imageSize.height.toFloat() / wallpaperItem?.imageDimension?.height?.toFloat()!!
+                val adjustedWidth = java.lang.Float.valueOf(wallpaperItem?.imageDimension?.width?.toFloat()!! * widthScaleFactor).toInt()
+
                 adjustedSize = ImageSize(adjustedWidth, imageSize.height)
 
                 if (adjustedRectF != null) {
@@ -151,13 +187,20 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
                      *  if wallpaper crop enable , original wallpaper size should be loaded first
                      */
 
-                    adjustedSize = ImageSize(wallpaperItem?.imageDimension?.width!!, wallpaperItem?.imageDimension?.height!!)
+                    adjustedSize = ImageSize(
+                        wallpaperItem?.imageDimension?.width!!,
+                        wallpaperItem?.imageDimension?.height!!
+                    )
                     adjustedRectF = WallpaperHelper.getScaledRestF(rectF, scaleFactor, scaleFactor)
 
-                    }
+                }
             }
 
-            var loadedBitmap = getImageLoader().loadImageSync(wallpaperItem?.imageLink, adjustedSize, ImageConfig.getWallpaperOptions())
+            var loadedBitmap = ImageLoader.getInstance().loadImageSync(
+                wallpaperItem?.imageLink,
+                adjustedSize,
+                ImageConfig.getWallpaperOptions()
+            )
 
             if (loadedBitmap == null) {
                 Log.d("Message", "Loading bitmap is null")
@@ -197,9 +240,10 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
                     )
 
 
-                    when(apply){
+                    when (apply) {
                         is Apply.HOMESCREEN -> {
-                          setHomeWallpaper(bitmap)
+                            setHomeWallpaper(bitmap)
+
                         }
 
                         is Apply.LOCKSCREEN -> {
@@ -211,7 +255,7 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
                             }
                         }
 
-                        is HOMESCREEN_LOCKSCREEN ->{
+                        is HOMESCREEN_LOCKSCREEN -> {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 WallpaperManager.getInstance(context?.get()!!.applicationContext)
                                     .setBitmap(
@@ -224,10 +268,12 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
                             }
                         }
 
-                        is Apply.HOME_CROP_WALLPAPER ->{
+                        is Apply.HOME_CROP_WALLPAPER -> {
+
                             /*
-                                 * Cropping bitmap
-                                 */
+                             * Cropping bitmap
+                             */
+
                             val targetSize = WallpaperHelper.getTargetSize(context?.get()!!)
 
                             val targetWidth = java.lang.Double.valueOf(
@@ -260,7 +306,10 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
                                 )
                             }
 
+                            Log.d("Message", "crop bitmap height ${bitmap.height}")
+
                             setHomeWallpaper(bitmap)
+
                         }
                     }
 
@@ -274,34 +323,37 @@ object WallpaperApplyTask : WallpaperPropertiesLoaderTask.CallbackWallpaper {
     }
 
 
-    fun setHomeWallpaper(bitmap: Bitmap){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    fun setHomeWallpaper(bitmap: Bitmap) {
+
+        GlobalScope.launch {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                WallpaperManager.getInstance(context?.get()!!.applicationContext)
+                    .setBitmap(
+                        bitmap, null, true, WallpaperManager.FLAG_SYSTEM
+                    )
+
+            }
+
+            Log.d("Message" , "final bitmap height ${bitmap.height} , width  ${bitmap.width}")
+
+            onBitmapCall?.carryBitmap(bitmap)
+
             WallpaperManager.getInstance(context?.get()!!.applicationContext)
-                .setBitmap(
-                    bitmap, null, true, WallpaperManager.FLAG_SYSTEM
-                )
+                .setBitmap(bitmap)
 
         }
-
-        WallpaperManager.getInstance(context?.get()!!.applicationContext)
-            .setBitmap(bitmap)
     }
-
-    fun getImageLoader(): ImageLoader {
-        var mImageLoader: ImageLoader?=null
-        if (mImageLoader == null) {
-            mImageLoader = ImageLoader.getInstance()
-            mImageLoader.init(ImageLoaderConfiguration.createDefault(context?.get()))
-        }
-        return mImageLoader!!
-    }
-
 
     sealed class Apply {
         class LOCKSCREEN : Apply()
         class HOMESCREEN : Apply()
         class HOMESCREEN_LOCKSCREEN() : Apply()
-        class HOME_CROP_WALLPAPER(): Apply()
+        class HOME_CROP_WALLPAPER() : Apply()
     }
 
+
+     interface OnBitmapCall{
+        fun carryBitmap(bitmap: Bitmap)
+    }
 }

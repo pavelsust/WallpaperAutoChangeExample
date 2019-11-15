@@ -27,7 +27,10 @@ import test.handlers.ImageHandler
 import test.handlers.StorageHandler
 import test.handlers.WallpaperHandler
 import java.io.File
-class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperPropertiesLoaderTask.CallbackWallpaper, WallpaperPropertieLocalLoaderTask.CallbackWallpaperLocal{
+
+class WallpaperActivity : AppCompatActivity(), View.OnClickListener,
+    WallpaperPropertiesLoaderTask.CallbackWallpaper,
+    WallpaperPropertieLocalLoaderTask.CallbackWallpaperLocal {
 
 
     private var bitmap: Bitmap? = null
@@ -64,7 +67,6 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
                 DialogHandler.dismiss()
 
 
-
             }
 
         //var wallpaper = WallpaperItem("http://demo-wallpaper.bollywoodgaana.com/url_lg/7566.jpg")
@@ -72,47 +74,49 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
         //https@ //images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500
 
 
-        //var wallpaper = WallpaperItem("https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
+        var wallpaper = WallpaperItem("https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
 
 
-        var wallpaper = WallpaperItem("/data/user/0/com.funapp.wallpaperautochangeexample/files/cached/qeQHw6xcPd.jpg")
+        //var wallpaper = WallpaperItem("file:///data/user/0/com.funapp.wallpaperautochangeexample/files/cached/qeQHw6xcPd.jpg")
+
+
 
         /*
         WallpaperPropertiesLoaderTask.prepare(applicationContext)
             .wallpaper(wallpaper)
             .callbackWallpaper(this)
             .start {
-                if (it){
+                if (it) {
 
                     runOnUiThread {
-                        Log.d("WALLPAPER_ITEM" , ""+it)
+                        Log.d("WALLPAPER_ITEM", "" + it)
                     }
                 }
             }
-            */
+
 
 
         WallpaperPropertieLocalLoaderTask.prepare(applicationContext)
             .wallpaper(wallpaper)
             .callbackWallpaper(this)
             .start {
-                if (it){
+                if (it) {
                     runOnUiThread {
-                        Log.d("Message" , ""+it)
+                        Log.d("Message", "" + it)
                     }
                 }
             }
 
+         */
 
-        /*
+
         WallpaperApplyTask.prepare(this)
             .wallpaper(wallpaper)
-            .to(WallpaperApplyTask.Apply.HOME_CROP_WALLPAPER())
+            .to(WallpaperApplyTask.Apply.HOMESCREEN())
             .start {
                 Log.d("Message", "Done Wallpaper")
             }
 
-         */
     }
 
     // fab click handling
@@ -130,7 +134,7 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
             }
 
             wallpaper_settings.id -> {
-                Toast.makeText(applicationContext , "Click" , Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Click", Toast.LENGTH_SHORT).show()
                 activityOpen(SettingActivity::class.java)
             }
 
@@ -150,7 +154,12 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
                                 StorageHandler.storeBitmapInFile(bitmap!!, file)
                                 WallpaperHandler.setWallpaper(this@WallpaperActivity, bitmap!!)
                                 // make available for media scanner
-                                MediaScannerConnection.scanFile(this@WallpaperActivity, arrayOf(file.toString()), arrayOf("image/jpeg"), null)
+                                MediaScannerConnection.scanFile(
+                                    this@WallpaperActivity,
+                                    arrayOf(file.toString()),
+                                    arrayOf("image/jpeg"),
+                                    null
+                                )
 
                                 runOnUiThread {
                                     toast("wallpaper applied successfully")
@@ -177,7 +186,12 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
                                 StorageHandler.storeBitmapInFile(bitmap!!, file)
 
                                 // make available for media scanner
-                                MediaScannerConnection.scanFile(this@WallpaperActivity, arrayOf(file.toString()), arrayOf("image/jpeg"), null)
+                                MediaScannerConnection.scanFile(
+                                    this@WallpaperActivity,
+                                    arrayOf(file.toString()),
+                                    arrayOf("image/jpeg"),
+                                    null
+                                )
 
                                 runOnUiThread {
                                     toast("image saved successfully")
@@ -196,9 +210,12 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
      */
     private fun getImage() {
 
-        Log.d("MAINACTIVITY" , ""+bitmap)
+        Log.d("MAINACTIVITY", "" + bitmap)
 
-        ImageHandler.getBitmapWallpaper(this, "https://source.unsplash.com/random/1440x3040/?${Prefs.getString("search", "")}") {
+        ImageHandler.getBitmapWallpaper(
+            this,
+            "https://source.unsplash.com/random/1440x3040/?${Prefs.getString("search", "")}"
+        ) {
             runOnUiThread {
                 if (it != null) {
                     F.compareBitmaps(it, bitmap) { com ->
@@ -210,11 +227,17 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
                                 bgWallpaper.setImageBitmap(it)
 
                                 // save bitmap in temp directory
-                                StorageHandler.storeBitmapInFile(it, File(cacheDir, "homescreen.jpg"))
+                                StorageHandler.storeBitmapInFile(
+                                    it,
+                                    File(cacheDir, "homescreen.jpg")
+                                )
 
                                 // save bitmap in cached directory
                                 val cached = File(filesDir, CACHED)
-                                StorageHandler.storeBitmapInFile(it, File(cached, "${F.shortid()}.jpg"))
+                                StorageHandler.storeBitmapInFile(
+                                    it,
+                                    File(cached, "${F.shortid()}.jpg")
+                                )
 
                                 // if extra images in cached then delete them
                                 F.deleteCached(this, Prefs.getString(CACHE_NUMBER, "25")!!.toInt())
@@ -239,13 +262,16 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
         }
     }
 
-    fun <T> activityOpen(it:Class<T>) = Intent().apply {
-        startActivity(Intent(this@WallpaperActivity , it))
+    fun <T> activityOpen(it: Class<T>) = Intent().apply {
+        startActivity(Intent(this@WallpaperActivity, it))
     }
 
     override fun onPropertiesReceived(wallpaper: WallpaperItem) {
         runOnUiThread {
-            Log.d("WALLPAPER_ITEM" , ""+wallpaper.mimeType+" "+wallpaper.imageDimension)
+            Log.d(
+                "WALLPAPER_ITEM",
+                "" + wallpaper.mimeType + " " + wallpaper.imageDimension
+            )
         }
     }
 

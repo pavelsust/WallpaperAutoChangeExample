@@ -5,7 +5,7 @@ import com.nostra13.universalimageloader.core.assist.ImageSize
 
 data class WallpaperItem(var imageLink: String) {
     var mimeType: String? = null
-    var imageSize: Int? = null
+    //var imageSize: Int? = null
 
     @ColorInt
     var color : Int?=null

@@ -3,6 +3,7 @@ package com.wallpaper
 import android.content.Context
 import android.graphics.BitmapFactory
 import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import com.nostra13.universalimageloader.core.assist.ImageSize
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,12 +42,13 @@ object WallpaperPropertieLocalLoaderTask {
                 callback(false)
             }
 
-            if (wallpaperItem?.imageDimension != null && wallpaperItem?.mimeType != null && wallpaperItem!!.imageSize!! > 0) {
+            if (wallpaperItem?.imageDimension != null && wallpaperItem?.mimeType != null ) {
                 callback(false)
             }
 
             val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
+
             BitmapFactory.decodeFile(wallpaperItem?.imageLink, options)
 
             val imageSize = ImageSize(options.outWidth, options.outHeight)
@@ -54,10 +56,18 @@ object WallpaperPropertieLocalLoaderTask {
             wallpaperItem?.imageDimension = imageSize
             wallpaperItem?.mimeType = options.outMimeType
 
+
+            /**
+             *  One error here about diskCache
+             *
+             */
+
+            /*
             val target = ImageLoader.getInstance().diskCache.get(wallpaperItem?.imageLink)
             if (target.exists()) {
                 wallpaperItem?.imageSize = target.length().toInt()
             }
+             */
 
             if (wallpaperCallback != null && wallpaperCallback?.get() != null) {
                 wallpaperCallback!!.get()?.onPropertiesReceived(wallpaperItem!!)
@@ -71,6 +81,7 @@ object WallpaperPropertieLocalLoaderTask {
     interface CallbackWallpaperLocal {
         fun onPropertiesReceived(wallpaper: WallpaperItem)
     }
+
 
 }
 

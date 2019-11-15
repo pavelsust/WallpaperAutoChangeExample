@@ -43,7 +43,7 @@ object WallpaperPropertiesLoaderTask {
                 callback(false)
             }
 
-            if (wallpaperItem?.imageDimension != null && wallpaperItem?.mimeType != null && wallpaperItem!!.imageSize!! > 0) {
+            if (wallpaperItem?.imageDimension != null && wallpaperItem?.mimeType != null ) {
                 callback(false)
             }
 
@@ -68,18 +68,27 @@ object WallpaperPropertiesLoaderTask {
                 Log.d("Message" , "from option"+options.inSampleSize)
                 Log.d("Message" , "from input"+httpConnection.contentLength)
 
+
+                /*
                 var contentLength = httpConnection.contentLength
                 if (contentLength > 0) {
                     wallpaperItem?.imageSize = contentLength
                 }
+
+                 */
+
+
                 stream.close()
 
+                /*
                 if (wallpaperItem!!.imageSize!! <= 0) {
                     val target = ImageLoader.getInstance().diskCache.get(wallpaperItem?.imageLink)
                     if (target.exists()) {
                         wallpaperItem?.imageSize = target.length().toInt()
                     }
                 }
+
+                 */
 
                 if (wallpaperCallback != null && wallpaperCallback?.get() != null) {
                     wallpaperCallback!!.get()?.onPropertiesReceived(wallpaperItem!!)
