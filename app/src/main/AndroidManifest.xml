@@ -29,15 +29,18 @@
             android:authorities="com.funapp.wallpaperautochangeexample"
             android:exported="false"
             android:grantUriPermissions="true">
+
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider_path" />
+
         </provider>
 
 
         <activity
             android:name=".activities.CacheActivity"
-            android:theme="@style/AppTheme.Fullscreen" /> <!-- Disable Advertising ID -->
+            android:theme="@style/AppTheme.Fullscreen" />
+
 
         <activity
             android:name=".activities.WallpaperActivity"

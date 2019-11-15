@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.funapp.wallpaperautochangeexample.R
 import com.wallpaper.WallpaperApplyTask
 import com.wallpaper.WallpaperItem
+import com.wallpaper.WallpaperPropertieLocalLoaderTask
 import com.wallpaper.WallpaperPropertiesLoaderTask
 import kotlinx.android.synthetic.main.activity_image.*
 import kotlinx.android.synthetic.main.activity_wallpaper.*
@@ -26,7 +27,7 @@ import test.handlers.ImageHandler
 import test.handlers.StorageHandler
 import test.handlers.WallpaperHandler
 import java.io.File
-class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperPropertiesLoaderTask.CallbackWallpaper{
+class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperPropertiesLoaderTask.CallbackWallpaper, WallpaperPropertieLocalLoaderTask.CallbackWallpaperLocal{
 
 
     private var bitmap: Bitmap? = null
@@ -71,7 +72,11 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
         //https@ //images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500
 
 
-        var wallpaper = WallpaperItem("https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
+        //var wallpaper = WallpaperItem("https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
+
+
+        var wallpaper = WallpaperItem("/data/user/0/com.funapp.wallpaperautochangeexample/files/cached/qeQHw6xcPd.jpg")
+
         /*
         WallpaperPropertiesLoaderTask.prepare(applicationContext)
             .wallpaper(wallpaper)
@@ -86,12 +91,28 @@ class WallpaperActivity : AppCompatActivity(), View.OnClickListener , WallpaperP
             }
             */
 
+
+        WallpaperPropertieLocalLoaderTask.prepare(applicationContext)
+            .wallpaper(wallpaper)
+            .callbackWallpaper(this)
+            .start {
+                if (it){
+                    runOnUiThread {
+                        Log.d("Message" , ""+it)
+                    }
+                }
+            }
+
+
+        /*
         WallpaperApplyTask.prepare(this)
             .wallpaper(wallpaper)
             .to(WallpaperApplyTask.Apply.HOME_CROP_WALLPAPER())
             .start {
                 Log.d("Message", "Done Wallpaper")
             }
+
+         */
     }
 
     // fab click handling

@@ -124,8 +124,8 @@
 
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.dawnimpulse.wallup.ui.activities.CacheActivity"
-                android:targetPackage="com.dawnimpulse.wallup" />
+                android:targetClass="com.funapp.wallpaperautochangeexample.activities.CacheActivity"
+                android:targetPackage="com.funapp.wallpaperautochangeexample" />
         </Preference>
 
     </PreferenceCategory>

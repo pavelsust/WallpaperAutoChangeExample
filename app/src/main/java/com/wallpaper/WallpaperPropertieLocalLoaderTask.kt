@@ -2,26 +2,15 @@ package com.wallpaper
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.net.Uri
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.assist.ImageSize
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.InputStream
 import java.lang.ref.WeakReference
-import java.net.HttpURLConnection
-import java.net.URL
-import org.apache.commons.io.FileUtils.openInputStream
-import android.graphics.Bitmap
-
-
 
 
 
 object WallpaperPropertieLocalLoaderTask {
-
-
 
     var wallpaperItem: WallpaperItem? = null
     var wallpaperCallback: WeakReference<CallbackWallpaperLocal>? = null
@@ -58,49 +47,24 @@ object WallpaperPropertieLocalLoaderTask {
 
             val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
-            BitmapFactory.decodeFile(wallpaperItem?.imageLink , options)
+            BitmapFactory.decodeFile(wallpaperItem?.imageLink, options)
 
             val imageSize = ImageSize(options.outWidth, options.outHeight)
 
             wallpaperItem?.imageDimension = imageSize
             wallpaperItem?.mimeType = options.outMimeType
 
-            val imageInByte = options.toByteArray()
-            val lengthbmp = imageInByte.size.toLong()
-
-
-
-            if (httpConnection.responseCode == HttpURLConnection.HTTP_OK) {
-                val stream: InputStream = httpConnection.inputStream
-
-                BitmapFactory.decodeStream(stream, null, options)
-
-                val imageSize = ImageSize(options.outWidth, options.outHeight)
-
-                wallpaperItem?.imageDimension = imageSize
-                wallpaperItem?.mimeType = options.outMimeType
-
-                var contentLength = httpConnection.contentLength
-                if (contentLength > 0) {
-                    wallpaperItem?.imageSize = contentLength
-                }
-                stream.close()
-
-
-                if (wallpaperItem!!.imageSize!! <= 0) {
-                    val target = ImageLoader.getInstance().diskCache.get(wallpaperItem?.imageLink)
-                    if (target.exists()) {
-                        wallpaperItem?.imageSize = target.length().toInt()
-                    }
-                }
-
-                if (wallpaperCallback != null && wallpaperCallback?.get() != null) {
-                    wallpaperCallback!!.get()?.onPropertiesReceived(wallpaperItem!!)
-                }
-
-                callback(true)
-
+            val target = ImageLoader.getInstance().diskCache.get(wallpaperItem?.imageLink)
+            if (target.exists()) {
+                wallpaperItem?.imageSize = target.length().toInt()
             }
+
+            if (wallpaperCallback != null && wallpaperCallback?.get() != null) {
+                wallpaperCallback!!.get()?.onPropertiesReceived(wallpaperItem!!)
+            }
+
+            callback(true)
+
         }
     }
 
@@ -108,5 +72,5 @@ object WallpaperPropertieLocalLoaderTask {
         fun onPropertiesReceived(wallpaper: WallpaperItem)
     }
 
-
 }
+

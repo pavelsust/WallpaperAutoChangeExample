@@ -1,6 +1,7 @@
 package com.funapp.wallpaperautochangeexample.adapter
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -39,9 +40,12 @@ class HolderImage(view: View): RecyclerView.ViewHolder(view){
             // handel image click
 
             image.setOnClickListener {
-                context.openNewActivity(ImageActivity::class.java){
-                    putString(IMAGE, file.path)
-                }
+                //context.openNewActivity(ImageActivity::class.java){
+                    //putString(IMAGE, file.path)
+                //}
+
+                Log.d("Message" , "File path: "+file.path)
+                ///data/user/0/com.funapp.wallpaperautochangeexample/files/cached/qeQHw6xcPd.jpg
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.funapp.wallpaperautochangeexample.activities
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -27,6 +28,8 @@ class CacheActivity : AppCompatActivity() {
             F.calculateMD5(it)
         }.toTypedArray()
         Arrays.sort(files, LastModifiedFileComparator.LASTMODIFIED_REVERSE)
+
+        Log.d("Message" , ""+files.toString())
 
         if (files.isNotEmpty()) {
             noCacheText.gone()
