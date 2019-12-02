@@ -47,6 +47,8 @@
             android:title="Only WiFi"
             app:iconSpaceReserved="true" />
 
+
+
         <!--Change toast-->
         <SwitchPreference
             android:defaultValue="true"

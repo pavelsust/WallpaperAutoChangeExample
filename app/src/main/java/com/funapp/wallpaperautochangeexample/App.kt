@@ -19,6 +19,7 @@ class App :Application(){
         super.onCreate()
 
         Prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
         if (!Prefs.contains("search")){
             Prefs.putAny("search" , "nature , landscape")
         }

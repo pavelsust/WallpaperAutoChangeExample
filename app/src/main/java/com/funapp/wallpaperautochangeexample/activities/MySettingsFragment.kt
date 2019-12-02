@@ -3,10 +3,7 @@ package com.funapp.wallpaperautochangeexample.activities
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.preference.*
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.funapp.wallpaperautochangeexample.BuildConfig
 import test.Prefs
 import com.funapp.wallpaperautochangeexample.R
@@ -161,9 +158,13 @@ class MySettingsFragment : PreferenceFragmentCompat() , Preference.OnPreferenceC
 
         // set wallpaper worker
         val uploadWorkRequest = PeriodicWorkRequestBuilder<AutoWallpaper>(time , TimeUnit.MINUTES)
+            .setBackoffCriteria(BackoffPolicy.LINEAR , 10 , TimeUnit.MINUTES)
             .setConstraints(builder).build()
 
-        WorkManager.getInstance(context!!).enqueue(uploadWorkRequest)
+        //WorkManager.getInstance(context!!).enqueue(uploadWorkRequest)
+
+        WorkManager.getInstance().enqueueUniquePeriodicWork("Wallpaper", ExistingPeriodicWorkPolicy.REPLACE, uploadWorkRequest)
+
         Prefs.putAny(AUTO_WALLPAPER, uploadWorkRequest.id.toString())
 
         // interval

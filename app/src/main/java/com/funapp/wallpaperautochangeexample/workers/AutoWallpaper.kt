@@ -65,6 +65,8 @@ class AutoWallpaper(private val appContext: Context, workerParams: WorkerParamet
             F.removeDuplicates(appContext.filesDir.listFiles().toList())
             wallpaperManager = WallpaperManager.getInstance(appContext)
             handler = Handler(Looper.getMainLooper())
+
+
             wallpaperChange {
                 if (it)
                     completer.set(Result.success())
